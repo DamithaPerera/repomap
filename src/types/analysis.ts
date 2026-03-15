@@ -24,7 +24,51 @@ export interface SocketEvent {
 export interface DbModel {
   id: string;
   name: string;
-  type: 'mongoose' | 'prisma' | 'sequelize' | 'typeorm' | 'drizzle' | 'dynamodb' | 'raw' | 'unknown';
+  type:
+    | 'mongoose'
+    | 'prisma'
+    | 'sequelize'
+    | 'typeorm'
+    | 'drizzle'
+    | 'dynamodb'
+    | 'neo4j'
+    | 'firebase'
+    | 'redis'
+    | 'elasticsearch'
+    // SQL ORMs
+    | 'knex'
+    | 'mikro-orm'
+    | 'objection'
+    | 'bookshelf'
+    | 'waterline'
+    // NoSQL
+    | 'couchdb'
+    | 'cassandra'
+    | 'mongodb'
+    | 'fauna'
+    | 'supabase'
+    // Time-series / Analytics
+    | 'influxdb'
+    | 'timescaledb'
+    | 'clickhouse'
+    // Multi-model / Graph
+    | 'arangodb'
+    | 'orientdb'
+    | 'rethinkdb'
+    | 'cockroachdb'
+    // Cloud / Hosted
+    | 'planetscale'
+    | 'turso'
+    | 'neon'
+    | 'upstash'
+    // Embedded / Local
+    | 'sqlite'
+    | 'leveldb'
+    | 'loki'
+    | 'pouchdb'
+    // Other
+    | 'raw'
+    | 'unknown';
   file: string;
   fields: DbField[];
   relations: DbRelation[];

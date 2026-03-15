@@ -26,6 +26,42 @@ const DB_TYPE_COLORS: Record<string, string> = {
   typeorm: 'text-orange-400',
   drizzle: 'text-yellow-400',
   dynamodb: 'text-amber-400',
+  neo4j: 'text-teal-400',
+  firebase: 'text-orange-300',
+  redis: 'text-red-400',
+  elasticsearch: 'text-yellow-300',
+  // SQL ORMs
+  knex: 'text-sky-400',
+  'mikro-orm': 'text-violet-400',
+  objection: 'text-pink-400',
+  bookshelf: 'text-rose-400',
+  waterline: 'text-indigo-400',
+  // NoSQL
+  couchdb: 'text-red-300',
+  cassandra: 'text-blue-300',
+  mongodb: 'text-green-300',
+  fauna: 'text-purple-400',
+  supabase: 'text-emerald-400',
+  pouchdb: 'text-orange-200',
+  // Time-series / Analytics
+  influxdb: 'text-cyan-300',
+  timescaledb: 'text-sky-300',
+  clickhouse: 'text-yellow-200',
+  // Multi-model / Graph
+  arangodb: 'text-teal-300',
+  orientdb: 'text-lime-400',
+  rethinkdb: 'text-pink-300',
+  cockroachdb: 'text-slate-300',
+  // Cloud / Hosted
+  planetscale: 'text-purple-300',
+  turso: 'text-amber-300',
+  neon: 'text-green-500',
+  upstash: 'text-red-300',
+  // Embedded / Local
+  sqlite: 'text-stone-400',
+  leveldb: 'text-zinc-400',
+  loki: 'text-fuchsia-400',
+  // Other
   unknown: 'text-slate-400',
 };
 

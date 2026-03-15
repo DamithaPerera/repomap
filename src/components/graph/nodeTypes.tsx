@@ -83,6 +83,42 @@ export function DbNode({ data, selected }: NodeProps) {
     typeorm: 'bg-orange-700',
     drizzle: 'bg-yellow-700',
     dynamodb: 'bg-amber-700',
+    neo4j: 'bg-teal-700',
+    firebase: 'bg-orange-600',
+    redis: 'bg-red-700',
+    elasticsearch: 'bg-yellow-600',
+    // SQL ORMs
+    knex: 'bg-sky-700',
+    'mikro-orm': 'bg-violet-700',
+    objection: 'bg-pink-700',
+    bookshelf: 'bg-rose-700',
+    waterline: 'bg-indigo-700',
+    // NoSQL
+    couchdb: 'bg-red-800',
+    cassandra: 'bg-blue-800',
+    mongodb: 'bg-green-800',
+    fauna: 'bg-purple-800',
+    supabase: 'bg-emerald-700',
+    pouchdb: 'bg-orange-800',
+    // Time-series / Analytics
+    influxdb: 'bg-cyan-800',
+    timescaledb: 'bg-sky-800',
+    clickhouse: 'bg-yellow-800',
+    // Multi-model / Graph
+    arangodb: 'bg-teal-800',
+    orientdb: 'bg-lime-800',
+    rethinkdb: 'bg-pink-800',
+    cockroachdb: 'bg-slate-700',
+    // Cloud / Hosted
+    planetscale: 'bg-purple-700',
+    turso: 'bg-amber-800',
+    neon: 'bg-green-600',
+    upstash: 'bg-red-600',
+    // Embedded / Local
+    sqlite: 'bg-stone-600',
+    leveldb: 'bg-zinc-700',
+    loki: 'bg-fuchsia-700',
+    // Other
     raw: 'bg-gray-700',
     unknown: 'bg-gray-600',
   };
