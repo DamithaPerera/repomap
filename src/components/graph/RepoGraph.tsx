@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import ReactFlow, {
   Background,
   Controls,
@@ -9,6 +9,8 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   BackgroundVariant,
+  useReactFlow,
+  ReactFlowProvider,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -26,25 +28,56 @@ const nodeTypes = {
 
 interface Props {
   analysis: ProjectAnalysis;
+  focusNodeId?: string | null;
+  onNodeSelect?: (id: string | null) => void;
 }
 
-export function RepoGraph({ analysis }: Props) {
+function GraphInner({ analysis, focusNodeId, onNodeSelect }: Props) {
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
     () => buildGraphElements(analysis),
     [analysis]
   );
 
-  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+  const { fitView, setCenter } = useReactFlow();
+
+  // Highlight + pan to node when focusNodeId changes (from list click)
+  useEffect(() => {
+    if (!focusNodeId) return;
+    const target = nodes.find((n) => n.id === focusNodeId);
+    if (!target) return;
+
+    // Highlight the node
+    setNodes((nds) =>
+      nds.map((n) => ({
+        ...n,
+        selected: n.id === focusNodeId,
+      }))
+    );
+
+    // Pan to it
+    setCenter(
+      target.position.x + 120,
+      target.position.y + 40,
+      { zoom: 1.2, duration: 600 }
+    );
+
+    setSelectedNode(target);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusNodeId]);
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
-    setSelectedNode((prev) => (prev?.id === node.id ? null : node));
-  }, []);
+    const next = selectedNode?.id === node.id ? null : node;
+    setSelectedNode(next);
+    onNodeSelect?.(next?.id ?? null);
+  }, [selectedNode, onNodeSelect]);
 
   const onPaneClick = useCallback(() => {
     setSelectedNode(null);
-  }, []);
+    onNodeSelect?.(null);
+  }, [onNodeSelect]);
 
   return (
     <div className="w-full h-full relative">
@@ -58,7 +91,7 @@ export function RepoGraph({ analysis }: Props) {
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.15 }}
-        minZoom={0.2}
+        minZoom={0.1}
         maxZoom={2}
         defaultEdgeOptions={{ type: 'smoothstep' }}
         proOptions={{ hideAttribution: true }}
@@ -76,8 +109,16 @@ export function RepoGraph({ analysis }: Props) {
         />
       </ReactFlow>
 
-      <DetailPanel node={selectedNode} onClose={() => setSelectedNode(null)} />
+      <DetailPanel node={selectedNode} onClose={() => { setSelectedNode(null); onNodeSelect?.(null); }} />
       <Legend />
     </div>
+  );
+}
+
+export function RepoGraph(props: Props) {
+  return (
+    <ReactFlowProvider>
+      <GraphInner {...props} />
+    </ReactFlowProvider>
   );
 }
