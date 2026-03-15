@@ -25,6 +25,7 @@ const DB_TYPE_COLORS: Record<string, string> = {
   sequelize: 'text-cyan-400',
   typeorm: 'text-orange-400',
   drizzle: 'text-yellow-400',
+  dynamodb: 'text-amber-400',
   unknown: 'text-slate-400',
 };
 

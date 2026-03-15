@@ -43,6 +43,7 @@ function detectTech(files: { relativePath: string; content: string }[]): string[
   if (allContent.includes('graphql')) tech.add('GraphQL');
   if (allContent.includes('redis')) tech.add('Redis');
   if (allContent.includes('mongodb')) tech.add('MongoDB');
+  if (/dynamodb|@aws-sdk\/client-dynamodb|@aws-sdk\/lib-dynamodb/i.test(allContent)) tech.add('DynamoDB');
   if (allContent.includes('postgres') || allContent.includes('pg')) tech.add('PostgreSQL');
   if (allContent.includes('mysql')) tech.add('MySQL');
   if (allContent.includes('sqlite')) tech.add('SQLite');

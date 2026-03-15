@@ -82,6 +82,7 @@ export function DbNode({ data, selected }: NodeProps) {
     sequelize: 'bg-cyan-700',
     typeorm: 'bg-orange-700',
     drizzle: 'bg-yellow-700',
+    dynamodb: 'bg-amber-700',
     raw: 'bg-gray-700',
     unknown: 'bg-gray-600',
   };

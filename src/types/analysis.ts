@@ -24,7 +24,7 @@ export interface SocketEvent {
 export interface DbModel {
   id: string;
   name: string;
-  type: 'mongoose' | 'prisma' | 'sequelize' | 'typeorm' | 'drizzle' | 'raw' | 'unknown';
+  type: 'mongoose' | 'prisma' | 'sequelize' | 'typeorm' | 'drizzle' | 'dynamodb' | 'raw' | 'unknown';
   file: string;
   fields: DbField[];
   relations: DbRelation[];
