@@ -317,10 +317,15 @@ function describeBusinessLogic(
   return extra.length ? `${sentence} (${extra.join(', ')})` : sentence;
 }
 
+// Exported so the orchestrator can pass bodies to the LLM enricher
+export interface ApiWithBody extends ApiEndpoint {
+  _body?: string;
+}
+
 // ─── Main export ─────────────────────────────────────────────────────────────
-export function detectApis(files: FileEntry[]): ApiEndpoint[] {
+export function detectApis(files: FileEntry[]): ApiWithBody[] {
   idCounter = 0;
-  const apis: ApiEndpoint[] = [];
+  const apis: ApiWithBody[] = [];
 
   for (const file of files) {
     const { content, relativePath } = file;
@@ -339,7 +344,7 @@ export function detectApis(files: FileEntry[]): ApiEndpoint[] {
       apis.push({
         id: makeId('api'), method, path: routePath, file: relativePath, line,
         description, params: extractParams(routePath), dbOperations: [],
-        auth: detectAuth(content, line),
+        auth: detectAuth(content, line), _body: body,
       });
     }
 
@@ -356,7 +361,7 @@ export function detectApis(files: FileEntry[]): ApiEndpoint[] {
       apis.push({
         id: makeId('api'), method, path: routePath, file: relativePath, line,
         description, params: extractParams(routePath), dbOperations: [],
-        auth: detectAuth(content, line),
+        auth: detectAuth(content, line), _body: body,
       });
     }
 
@@ -376,7 +381,7 @@ export function detectApis(files: FileEntry[]): ApiEndpoint[] {
       apis.push({
         id: makeId('api'), method, path: routePath, file: relativePath, line,
         description, params: extractParams(routePath), dbOperations: [],
-        auth: detectAuth(content, line),
+        auth: detectAuth(content, line), _body: body,
       });
     }
   }

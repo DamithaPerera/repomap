@@ -8,6 +8,7 @@ import { detectApis } from './apiDetector';
 import { detectSockets } from './socketDetector';
 import { detectDbModels } from './dbDetector';
 import { mapRelationships } from './relationMapper';
+import { llmDescribeEndpoints, llmDescribeSockets } from './llmDescriber';
 
 function getTempDir(): string {
   return path.join(os.tmpdir(), 'repomap-clones');
@@ -132,6 +133,51 @@ export async function analyzeRepository(repoUrl: string): Promise<ProjectAnalysi
     const models = detectDbModels(files);
     const apiModelEdges = mapRelationships(apis, models, files);
     const tech = detectTech(files);
+
+    // ── LLM enrichment: only enrich endpoints that don't already have a
+    //    comment-sourced description (those are already high quality).
+    //    Skip connection/disconnect lifecycle sockets.
+    const apisNeedingLLM = apis
+      .map((a, i) => ({ i, a }))
+      .filter(({ a }) => a._body && a._body.length > 50);
+
+    const socketsNeedingLLM = sockets
+      .map((s, i) => ({ i, s }))
+      .filter(({ s }) => s._body && s._body.length > 20);
+
+    const [apiDescMap, socketDescMap] = await Promise.all([
+      llmDescribeEndpoints(
+        apisNeedingLLM.map(({ a }) => ({
+          method: a.method,
+          path: a.path,
+          body: a._body!,
+          handlerName: '',
+          file: a.file,
+        }))
+      ),
+      llmDescribeSockets(
+        socketsNeedingLLM.map(({ s }) => ({
+          event: s.event,
+          type: s.type,
+          body: s._body!,
+          file: s.file,
+        }))
+      ),
+    ]);
+
+    // Apply LLM descriptions back (overwrite regex fallback)
+    apisNeedingLLM.forEach(({ i }, llmIdx) => {
+      const desc = apiDescMap.get(llmIdx);
+      if (desc) apis[i].description = desc;
+    });
+    socketsNeedingLLM.forEach(({ i }, llmIdx) => {
+      const desc = socketDescMap.get(llmIdx);
+      if (desc) sockets[i].description = desc;
+    });
+
+    // Strip internal _body fields before returning
+    apis.forEach((a) => { delete (a as { _body?: string })._body; });
+    sockets.forEach((s) => { delete (s as { _body?: string })._body; });
 
     return {
       repoUrl: cleanUrl,
